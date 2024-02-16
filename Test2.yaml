@@ -21,6 +21,24 @@
         dest: /var/www/html/index.html
         force: yes
 
+      notify:
+         - restart httpd service
+      
+      notify:
+         - restart php service
+
+  handlers:
+    - name: restart httpd service
+      service:
+        name: apache2
+        state: restarted
+    
+    - name: restart php service
+      service:
+        name: php
+        state: restarted
+
+
 #      notify:
 #         - restart httpd service
 
