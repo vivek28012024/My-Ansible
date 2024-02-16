@@ -1,0 +1,31 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Installing Apache, MYSQL DB Community edition & PHP
+      apt:
+        name:
+          - apache2
+          - php
+          - php-mysql
+        state: present
+
+    - name: Enabling httpd service and start the service
+      service:
+        name: apache2
+        state: restarted
+        
+    - name: Copying your php file in the /var/www/html
+      copy:
+        src: /etc/ansible/YAML/index.html
+        dest: /var/www/html/index.html
+        force: yes
+
+#      notify:
+#         - restart httpd service
+
+#  handlers:
+#    - name: restart httpd service
+#      service:
+#        name: httpd
+#        state: restarted
