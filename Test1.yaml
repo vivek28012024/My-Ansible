@@ -1,0 +1,24 @@
+---
+- name: Server Details
+  hosts: appservers
+  #ansible_user: administrator
+  #ansible_password: A2552721a!@
+
+  tasks:
+  - name: Remove httpd
+    apt: pkg=httpd state=absent
+
+  - name: Install apache2
+    apt: pkg=apache2 state=present
+
+  - name: Execute shell command date
+    command: date
+
+  - name: display content 
+    command: cat /home/administrator/sample.txt
+    
+  - name: display content by changing dir
+    command: cat sample.txt chdir=/home/administrator
+    
+  - name: makes
+    command: mkdir /home/administrator/new-dir creates=/home/administrator/new-dir
