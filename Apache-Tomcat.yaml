@@ -1,0 +1,42 @@
+---
+- hosts: all
+  tasks:
+    - name: Installing Update
+      apt: state=latest force_apt_get=yes
+    - name: Installing JAVA
+      apt:
+        name: default-jdk
+        state: present       
+    - name: Adding Group and user for Tomcat
+      shell: groupadd tomcat && useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+    - name : Installing curl.
+      apt: 
+        name: curl
+        state: latest
+    - name: Downloading Apache Tomcat tar
+      shell: wget http://redrockdigimark.com/apachemirror/tomcat/tomcat-8/v8.5.31/bin/apache-tomcat-8.5.31.tar.gz
+    - name: Creating Apache Tomcat home directory.
+      command: mkdir /opt/tomcat
+    - name: Extracting Apache Tomcat.
+      shell: tar -xzvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
+    - name: Creating Apache Tomcat home directory.
+      command: cd /opt/tomcat
+    - name: Updating permission.
+      command: "{{ item }}"
+      with_items:
+        - chown -R tomcat:tomcat /opt/tomcat
+        - chmod -R g+r /opt/tomcat/conf
+        - chmod g+x /opt/tomcat/conf
+        - chown -R tomcat:tomcat webapps/work/temp/logs/
+    - name: download foo.conf
+      get_url:
+        url: https://github.com/vivek28012024/My-Ansible/blob/main/tomcat_services
+        dest: /etc/systemd/system/tomcat.service
+    - name: Deamon reload
+      command: systemctl daemon-reload
+    - name: Starting Apache Tomcat service.
+      service: 
+        name: apache2 
+        state: started
+#        enabled: true
+#        daemon_reload: true
