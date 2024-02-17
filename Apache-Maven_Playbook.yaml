@@ -1,0 +1,38 @@
+---
+- hosts: all
+  tasks:
+#    - name: Installing Update
+#      apt: state=latest force_apt_get=yes        
+  - name: Installing Python properties
+    apt:
+       name: software-properties-common
+       state: present       
+#    - name: Installing Python common
+#      apt:
+#        name: python-software-common
+#        state: present
+  - name: Adding respository
+    shell: add-apt-repository ppa:webupd8team/java
+  - name: Installing Update
+    apt: state=latest force_apt_get=yes 
+  - name: Installing JAVA
+    apt:
+        name: default-jdk
+        state: present
+  - name: cd to /home/administrator/download
+    command: cd /home/administrator/download
+  - name : Installing curl.
+    apt: 
+        name: curl
+        state: latest
+  - name: Downloading Apache Maven tar
+    shell: wget http://apache.mirror.digitalpacific.com.au/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+  - name: Extracting Apache Maven.
+    shell: tar -xzvf /home/administrator/Downloads/apache-maven-3.3.9-bin.tar.gz
+  - name: change Maven alternatives
+    shell: update-alternatives --install /usr/bin/mvn maven /opt/apache-maven-3.3.9/bin/mvn 1001
+#Unable to get alternatives working    
+#       alternatives:	    
+#        name: maven    
+#        path: /usr/share/mvn   
+#        link:  /opt/apache-maven-3.3.9/bin/mvn
